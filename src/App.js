@@ -31,6 +31,8 @@ function App() {
         setPosts([...posts].sort((a, b) =>a[sort].localeCompare(b[sort])))
     }
 
+
+
     return (
     <div className = "App">
         <PostForm create ={createPost}/>
@@ -45,6 +47,7 @@ function App() {
                 {value: 'body', name: 'По описанию'}
             ]}
           />
+
         </div>
         {posts.length
           ?
