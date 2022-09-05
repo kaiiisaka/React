@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import ClassCounter from './components/ClassCounter';
 import Counter from './components/counter';
 import PostForm from './components/PostForm';
@@ -8,55 +8,49 @@ import MyButton from './components/UI/Button/MyButton';
 import MyInput from './components/UI/input/MyInput';
 import Myselect from './components/UI/select/Myselect';
 import './styles/App.css';
+import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
+import {usePosts} from "./components/hooks/usePosts";
+import axios from "axios";
 
 function App() {
-    const [posts, setPosts] = useState([
-      {id: 1, title: 'первый', body: 'а описание'},
-      {id: 2, title: 'второй 2', body: 'б описание'},
-      {id: 3, title: 'третий 3', body: 'в описание'},
-    ])
-    //получаем пост из дочернего компонента
-    const removePost = (post) => {
-      setPosts(posts.filter(p => p.id !== post.id))
-    }
+    const [posts, setPosts] = useState([])
 
-    const [selectedSort, setSelectedSort] = useState('')
+    const [filter, setFilter] = useState({sort:'', query:''})
+    const [modal, setModal] = useState(false)
+
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
     const createPost = (newPost) => {
       setPosts ([...posts, newPost])
+        setModal(false)
     }
 
-    const sortPosts = (sort) => {
-        setSelectedSort(sort);
-        setPosts([...posts].sort((a, b) =>a[sort].localeCompare(b[sort])))
+    async function fetchPosts() {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+        console.log(response.data)
     }
 
-
+    //получаем пост из дочернего компонента
+    const removePost = (post) => {
+        setPosts(posts.filter(p => p.id !== post.id))
+    }
 
     return (
     <div className = "App">
-        <PostForm create ={createPost}/>
+        <button></button>
+        <MyButton style = {{marginTop: 30}} onClick={() => setModal(true)}>
+            Создать пост
+        </MyButton>
+        <MyModal visible={modal} setVisible={setModal}>
+            <PostForm create ={createPost}/>
+        </MyModal>
         <hr style={{margin: '15px 0'}}/>
-        <div>
-          <Myselect
-              value={selectedSort}
-              onChange={sortPosts}
-            defaultValue="Сортировка"
-            options={[
-                {value: 'title', name: 'По названию'},
-                {value: 'body', name: 'По описанию'}
-            ]}
-          />
-
-        </div>
-        {posts.length
-          ?
-          <PostList remove={removePost} posts={posts} title="Посты про Js"/>
-          :
-          <h1 style={{textAlign: 'center'}}>
-            Посты не найдены!
-            </h1>
-        } 
+        <PostFilter
+            filter={filter}
+            setFilter={setFilter}
+        />
+          <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты про Js"/>
     </div>
     );
 }
