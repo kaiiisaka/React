@@ -22,13 +22,30 @@ import About from "./pages/About";
 import Posts from "./pages/Posts";
 import Navbar from "./components/UI/Navbar/Navbar";
 import AppRouter from "./components/AppRouter";
+import {AuthContext} from "./context";
 
 function App() {
+
+    useEffect(() => {
+        if (localStorage.getItem('auth')){
+            setIsAuth(true)
+        }
+        setLoading(false)
+    },[])
+
+    const [isLoading, setLoading] = useState(true)
+    const [isAuth, setIsAuth] = useState(false)
     return (
-        <BrowserRouter>
+        <AuthContext.Provider value={{
+            isAuth,
+            setIsAuth,
+            isLoading
+        }}>
+            <BrowserRouter>
                 <Navbar/>
                 <AppRouter/>
-        </BrowserRouter>
+            </BrowserRouter>
+        </AuthContext.Provider>
     )
 }
 
