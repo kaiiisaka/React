@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import MyInput from "../components/UI/input/MyInput";
 import MyButton from "../components/UI/Button/MyButton";
 import {AuthContext} from "../context";
+import MyComponent from "../scripts/vanta";
 
 const Login = () => {
     const {isAuth, setIsAuth} = useContext(AuthContext)
@@ -11,8 +12,9 @@ const Login = () => {
         localStorage.setItem('auth', 'true')
     }
 
+
     return (
-        <div>
+        <div class="login">
             <h1>
                 Login page
             </h1>
@@ -21,6 +23,7 @@ const Login = () => {
                 <MyInput type="password" placeholder="Password"/>
                 <MyButton>Enter</MyButton>
             </form>
+            {/*<MyComponent/>*/}
         </div>
     );
 };

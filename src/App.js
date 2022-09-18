@@ -23,6 +23,8 @@ import Posts from "./pages/Posts";
 import Navbar from "./components/UI/Navbar/Navbar";
 import AppRouter from "./components/AppRouter";
 import {AuthContext} from "./context";
+import Vanta from "./scripts/vanta";
+
 
 function App() {
 
